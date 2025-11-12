@@ -1,0 +1,50 @@
+name: Check and Download Game Versions
+
+on:
+  schedule:
+    # Run every 10 minutes
+    - cron: '*/10 * * * *'
+  workflow_dispatch: # Allow manual triggers
+
+jobs:
+  check-and-download:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Install cytrus-v6 globally
+        run: npm install -g cytrus-v6
+      
+      - name: Configure Git
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "actions@github.com"
+      
+      - name: Check and download main release
+        run: |
+          chmod +x ./scripts/check-and-download.sh
+          ./scripts/check-and-download.sh main
+      
+      - name: Check and download beta release
+        run: |
+          ./scripts/check-and-download.sh beta
+      
+      - name: Push changes if any
+        run: |
+          if [[ -n $(git status --porcelain) ]]; then
+            git add .
+            git commit -m "Auto-update: New game version(s) downloaded"
+            git push
+          else
+            echo "No new versions found"
+          fi
