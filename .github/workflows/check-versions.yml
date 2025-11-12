@@ -6,6 +6,10 @@ on:
     - cron: '*/10 * * * *'
   workflow_dispatch: # Allow manual triggers
 
+# Grant write permissions to the workflow
+permissions:
+  contents: write
+
 jobs:
   check-and-download:
     runs-on: ubuntu-latest
