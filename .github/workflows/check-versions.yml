@@ -34,14 +34,22 @@ jobs:
           git config user.name "GitHub Actions Bot"
           git config user.email "actions@github.com"
       
-      - name: Check and download main release
+      - name: Check and download retro main release
         run: |
           chmod +x ./scripts/check-and-download.sh
-          ./scripts/check-and-download.sh main
+          ./scripts/check-and-download.sh retro main
       
-      - name: Check and download beta release
+      - name: Check and download retro beta release
         run: |
-          ./scripts/check-and-download.sh beta
+          ./scripts/check-and-download.sh retro beta
+      
+      - name: Check and download wakfu main release
+        run: |
+          ./scripts/check-and-download.sh wakfu main
+      
+      - name: Check and download wakfu beta release
+        run: |
+          ./scripts/check-and-download.sh wakfu beta
       
       - name: Push changes if any
         run: |
